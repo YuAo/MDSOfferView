@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.offerView.setTitle(price, forState: .Normal)
+        self.offerView.setTitle(price, for: .normal)
 
         self.offerView.actionHandler = { _ in
             self.offerViewTapped()
@@ -31,18 +31,18 @@ class ViewController: UIViewController {
         if !showingConfirmation {
             showingConfirmation = true
             
-            self.offerView.setTitle("BUY", forState: .Normal)
+            self.offerView.setTitle("BUY", for: .normal)
             self.offerView.tintColor = UIColor(red: 0.039, green: 0.733, blue: 0.545, alpha: 1)
         } else {
             
-            self.offerView.setTitle(price, forState: .Normal)
+            self.offerView.setTitle(price, for: .normal)
             self.offerView.tintColor = nil
             
-            self.offerView.state = .PendingDownload
+            self.offerView.state = .pendingDownload
             
             Delay(interval: 2.second) {
                 
-                self.offerView.state = .Downloading
+                self.offerView.state = .downloading
                 self.offerView.setProgress(0.1, animated: true)
                 
             }.then(Delay(interval: 0.6.second) {
@@ -63,7 +63,7 @@ class ViewController: UIViewController {
                 
             }).then(Delay(interval: 0.5.second) {
                 
-                self.offerView.state = .Downloaded
+                self.offerView.state = .downloaded
                 self.offerView.enabled = false
                 
             }).run()

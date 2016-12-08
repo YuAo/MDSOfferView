@@ -8,21 +8,21 @@
 
 import Foundation
 
-public class Delay {
-    private var previousDelay: Delay?
-    private var thenDelay: Delay?
-    private var action: () -> Void
-    private var interval: NSTimeInterval = 0
-    init(interval: NSTimeInterval, action: () -> Void) {
+open class Delay {
+    fileprivate var previousDelay: Delay?
+    fileprivate var thenDelay: Delay?
+    fileprivate var action: () -> Void
+    fileprivate var interval: TimeInterval = 0
+    init(interval: TimeInterval, action: @escaping () -> Void) {
         self.interval = interval
         self.action = action
     }
-    func then(thenDelay: Delay) -> Delay {
+    func then(_ thenDelay: Delay) -> Delay {
         self.thenDelay = thenDelay
         thenDelay.previousDelay = self
         return thenDelay
     }
-    private func start() {
+    fileprivate func start() {
         delay(self.interval, closure: {
             self.action()
             self.thenDelay?.start()
@@ -41,20 +41,20 @@ public class Delay {
     }
 }
 
-public func delay(aDelay:NSTimeInterval, closure: () -> Void) {
-    delay(aDelay, queue: dispatch_get_main_queue(), closure: closure)
+public func delay(_ aDelay:TimeInterval, closure: @escaping () -> Void) {
+    delay(aDelay, queue: DispatchQueue.main, closure: closure)
 }
 
-public func delay(aDelay:NSTimeInterval, queue: dispatch_queue_t!, closure: () -> Void) {
-    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(aDelay * Double(NSEC_PER_SEC)))
-    dispatch_after(delayTime, queue, closure)
+public func delay(_ aDelay:TimeInterval, queue: DispatchQueue!, closure: @escaping () -> Void) {
+    let delayTime = DispatchTime.now() + Double(Int64(aDelay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+    queue.asyncAfter(deadline: delayTime, execute: closure)
 }
 
 public extension Double {
-    var second: NSTimeInterval { return self }
-    var seconds: NSTimeInterval { return self }
-    var minute: NSTimeInterval { return self * 60 }
-    var minutes: NSTimeInterval { return self * 60 }
-    var hour: NSTimeInterval { return self * 3600 }
-    var hours: NSTimeInterval { return self * 3600 }
+    var second: TimeInterval { return self }
+    var seconds: TimeInterval { return self }
+    var minute: TimeInterval { return self * 60 }
+    var minutes: TimeInterval { return self * 60 }
+    var hour: TimeInterval { return self * 3600 }
+    var hours: TimeInterval { return self * 3600 }
 }
